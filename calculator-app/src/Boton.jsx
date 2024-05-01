@@ -9,7 +9,12 @@ export function Boton({ valor, trabajo, valores, desactivado }) {
             <button onClick={() => trabajo(valores)} disabled = {desactivado}> {valor} </button>       
           </>
         )
-
+        case '⌫':
+          return (
+            <>
+              <button onClick={() => trabajo(valores)} > {valor} </button>       
+            </>
+          )
         case 'C':
           return (
             <>
