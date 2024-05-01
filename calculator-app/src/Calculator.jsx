@@ -4,39 +4,42 @@ import { Boton } from './Boton.jsx'
 import { Pantalla } from './Pantalla.jsx'
 
 function Calculator() {
-  const [valorSeleccionado, setValorSeleccionado] = useState([]) // useState es asincrono
+  const [valorTotal, setValorTotal] = useState([]) // useState es asincrono
   const [bloquearOperador, setBloquearOperador] = useState(true)
   const [bloquearNegativo, setBloquearNegativo] = useState(false)
+  const [bloquearParentesis, setbloquearParentesis] = useState(false)
 
   const actualizarValor = (valor) => {
-    setValorSeleccionado(prev => [...prev,valor]) //Declaras una variable que contiene todos los valores previos
+    setValorTotal(prev => [...prev,valor]) //Declaras una variable que contiene todos los valores previos
     //del array y le agregas el nuevo valor.
   }
 
   const resultado = (valores) => {
     try {
       let resultadoParcial = eval(valores.join('')); //El eval hace que el array quede como si lo hayas escrito a mano 
-      setValorSeleccionado([resultadoParcial])
+      setValorTotal([resultadoParcial])
     } catch (error) {
       console.error('Ocurrio un error ', error)
     }
-   
   }
 
-  const verificarPeticion = (valoresPeticion) => {
+  const verificarParentesis = (ultimoValor) => {
+    
+  }
+
+  const verificarUltimoValor = (valoresPeticion) => {
     let ultimoValor = valoresPeticion[valoresPeticion.length - 1] //Sacamos el ultimo valor del array, pues es el unico valor que nos interesa para validar el tema de los operadores
+    verificarParentesis(ultimoValor)
     
     if(esUnOperador(ultimoValor)){
-      setBloquearOperador(true) 
-      
-    } else {
+      setBloquearOperador(true)
+    } else { // Si el ultimo valor del array no es un operador hay que dejar los operadores habilitados
       setBloquearOperador(false)
-      setBloquearNegativo(false)
+      setBloquearNegativo(false) 
     } 
   } 
 
   const esUnOperador = (valor)  => {
-    console.log(valor)
     switch(valor){
       case '+':
         setBloquearNegativo(false) 
@@ -60,25 +63,24 @@ function Calculator() {
   }
 
   const limpiar = () => {
-    setValorSeleccionado([])
+    setValorTotal([])
   }
 
   useEffect(() => {
-    if (valorSeleccionado.length == 0){
+    if (valorTotal.length == 0){
       setBloquearOperador(true)
       setBloquearNegativo(false) 
     } else {
-      verificarPeticion(valorSeleccionado)
+      verificarUltimoValor(valorTotal)
     } 
-    
-  }, [valorSeleccionado]);
+  }, [valorTotal]);
 
   
 
   return (
     <>
       <div className='calculadora'>
-        <Pantalla valores={valorSeleccionado}></Pantalla>
+        <Pantalla valores={valorTotal}></Pantalla>
 
         <div className='tablero-calculadora'>
           <div className='numeros-calculadora'>
@@ -99,10 +101,10 @@ function Calculator() {
             <Boton valor={'*'} trabajo = {actualizarValor} desactivado = {bloquearOperador} ></Boton>
             <Boton valor={'-'} trabajo = {actualizarValor} desactivado = {bloquearNegativo} ></Boton>
             <Boton valor={'/'} trabajo = {actualizarValor} desactivado = {bloquearOperador} ></Boton>
-            <Boton valor={'('} trabajo = {actualizarValor} desactivado = {true} ></Boton>
-            <Boton valor={')'} trabajo = {actualizarValor} desactivado = {true} ></Boton>
-            <Boton valor={'='} trabajo = {resultado} valores = {valorSeleccionado} desactivado = {bloquearOperador} ></Boton>
-            <Boton valor={'C'} trabajo = {limpiar} valores = {valorSeleccionado}></Boton>
+            <Boton valor={'('} trabajo = {actualizarValor} desactivado = {bloquearParentesis} ></Boton>
+            <Boton valor={')'} trabajo = {actualizarValor} desactivado = {bloquearParentesis} ></Boton>
+            <Boton valor={'='} trabajo = {resultado} valores = {valorTotal} desactivado = {bloquearOperador} ></Boton>
+            <Boton valor={'C'} trabajo = {limpiar} valores = {valorTotal}></Boton>
           </div>
           
         </div>
