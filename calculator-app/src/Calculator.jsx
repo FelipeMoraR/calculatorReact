@@ -29,6 +29,10 @@ function Calculator() {
   }
 
   const borrarUltimoValor = (valorTotal) => {
+    let ultimoValor = valorTotal[valorTotal.length - 1]
+    if(ultimoValor == ')'){
+      setContadorParentesisDer(contadorParentesisDer - 1)
+    }
     let nuevoArray = valorTotal.slice(0, -1);
     setValorTotal(nuevoArray)
   }
@@ -38,14 +42,13 @@ function Calculator() {
     setContadorParentesisDer(contadorParentesisDer + 1)
   }
 
-  const verificarParentesisDer = (valorTotal) => {
+  const habilitarParentesisDer = (valorTotal) => {
     valorTotal.forEach((valor) => {
       if(valor === '('){
         contadorParentesisIzq = contadorParentesisIzq + 1;
       }
     })
-    console.error(contadorParentesisIzq)
-    console.error(contadorParentesisDer)
+
     if(contadorParentesisIzq != contadorParentesisDer){
       setbloquearParentesisDer(false)
     } else {
@@ -59,9 +62,11 @@ function Calculator() {
 
     if(esUnOperador(ultimoValor)){ //Si es un operador
       setBloquearOperador(true)
+      setbloquearParentesisIzq(false)
     } else { // Si el ultimo valor del array no es un operador hay que dejar los operadores habilitados
       setBloquearOperador(false)
-      setBloquearNegativo(false)
+      setBloquearNegativo(false) //Este useState está apartado al resto pues se comporta de manera distinta
+      setbloquearParentesisIzq(true)
     } 
   } 
 
@@ -69,30 +74,24 @@ function Calculator() {
     switch(valor){
       case '+':
         setBloquearNegativo(false) 
-        setbloquearParentesisIzq(false)
         return true
       
       case '*':
         setBloquearNegativo(false)
-        setbloquearParentesisIzq(false)
         return true
       
       case '/':
         setBloquearNegativo(false)
-        setbloquearParentesisIzq(false)
         return true
-      
+  
       case '-':
         setBloquearNegativo(true)
-        setbloquearParentesisIzq(false)
         return true
       case '(': //Controlo que si el ultimo valor es un ( los operadores se bloquean para evitar esta configuracion (*2-2)
         setBloquearNegativo(false)
-        setbloquearParentesisIzq(false)
         return true
 
       default:
-        setbloquearParentesisIzq(true)
         return false
     }
   }
@@ -111,7 +110,7 @@ function Calculator() {
       verificarUltimoValor(valorTotal)
     } 
 
-    verificarParentesisDer(valorTotal)
+    habilitarParentesisDer(valorTotal) //Esto se ejecuta independientemente de si hay o no elementos en la pantalla
   }, [valorTotal]);
 
   
