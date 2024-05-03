@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import { Boton } from './Boton.jsx'
 import { Pantalla } from './Pantalla.jsx'
@@ -14,12 +14,27 @@ function Calculator() {
   
 
   const resultado = (valores) => {
+    
     try {
-      let resultadoParcial = eval(valores.join('')); //El eval hace que el array quede como si lo hayas escrito a mano 
+      let expresion = valores.join('');
+      let resultadoParcial = new Function('return ' + expresion)(); //Crea una funcion que retorna la expresion creada 
+      
       setValorTotal([resultadoParcial])
       setContadorParentesisDer(0) //Reseteamos el contador cuando le da a ver resultado
     } catch (error) {
-      console.error('Ocurrio un error ', error)
+      console.error('Este es el error => ', error)
+      mensajeErrorResultado(valores)
+      setContadorParentesisDer(0)
+      limpiar()
+    }
+  }
+
+  const mensajeErrorResultado = (resultado) => {
+    let resultadoUnido = resultado.join('')
+    if( resultadoUnido.includes('()') ) {
+      alert('Error, el formato tiene parentesis vacios')
+    } else {
+      alert('Error, hay uno o varios parentesis sin cerrar')
     }
   }
 
@@ -59,7 +74,7 @@ function Calculator() {
 
   const verificarUltimoValor = (valoresPeticion) => {
     let ultimoValor = valoresPeticion[valoresPeticion.length - 1] //Sacamos el ultimo valor del array, pues es el unico valor que nos interesa para validar el tema de los operadores
-
+   
     if(esUnOperador(ultimoValor)){ //Si es un operador
       setBloquearOperador(true)
       setbloquearParentesisIzq(false)
@@ -134,18 +149,22 @@ function Calculator() {
             <Boton valor = {0} trabajo = {actualizarValor} ></Boton>
           </div>
 
-          <div className='operaciones-calculadora'>
-            <Boton valor={'+'} trabajo = {actualizarValor} desactivado = {bloquearOperador} ></Boton>
-            <Boton valor={'*'} trabajo = {actualizarValor} desactivado = {bloquearOperador} ></Boton>
-            <Boton valor={'-'} trabajo = {actualizarValor} desactivado = {bloquearNegativo} ></Boton>
-            <Boton valor={'/'} trabajo = {actualizarValor} desactivado = {bloquearOperador} ></Boton>
-            <Boton valor={'('} trabajo = {actualizarValor} desactivado = {bloquearParentesisIzq} ></Boton>
-            <Boton valor={')'} trabajo = {clickParentesisDer} desactivado = {bloquearParentesisDer} ></Boton>
-            <Boton valor={'='} trabajo = {resultado} valores = {valorTotal} desactivado = {bloquearOperador} ></Boton>
-            <Boton valor={'C'} trabajo = {limpiar} valores = {valorTotal}></Boton>
-            <Boton valor={'⌫'} trabajo = {borrarUltimoValor} valores = {valorTotal}> </Boton>
-          </div>
-          
+          <div className='panel-operaciones-calculadora'>
+            <div className='operaciones-calculadora'>
+              <Boton valor={'+'} trabajo = {actualizarValor} desactivado = {bloquearOperador} ></Boton>
+              <Boton valor={'*'} trabajo = {actualizarValor} desactivado = {bloquearOperador} ></Boton>
+              <Boton valor={'-'} trabajo = {actualizarValor} desactivado = {bloquearNegativo} ></Boton>
+              <Boton valor={'/'} trabajo = {actualizarValor} desactivado = {bloquearOperador} ></Boton>
+              <Boton valor={'('} trabajo = {actualizarValor} desactivado = {bloquearParentesisIzq} ></Boton>
+              <Boton valor={')'} trabajo = {clickParentesisDer} desactivado = {bloquearParentesisDer} ></Boton>
+            </div>
+
+            <div className='operaciones-especiales-calculadora'>
+              <Boton valor={'='} trabajo = {resultado} valores = {valorTotal} desactivado = {bloquearOperador} ></Boton>
+              <Boton valor={'C'} trabajo = {limpiar} valores = {valorTotal}></Boton>
+              <Boton valor={'⌫'} trabajo = {borrarUltimoValor} valores = {valorTotal}> </Boton>
+            </div>
+            </div>
         </div>
 
       </div>

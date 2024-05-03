@@ -2,8 +2,11 @@ import PropTypes from 'prop-types';
 
 export function Pantalla({valores}){
     
-    return <div>Numero en Pantalla {valores}</div>
-       
+    if(valores.length !== 0){
+        return <div className='pantalla-calculadora'>{valores}</div>
+    } else {
+        return <div className='pantalla-calculadora'>---</div>
+    }
 }
 
 Pantalla.propTypes = {
