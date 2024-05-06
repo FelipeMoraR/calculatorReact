@@ -1,3 +1,7 @@
+*{
+    font-family: "VT323", monospace;
+}
+
 .overlay-modal{
     position: absolute;
     z-index: 1;
@@ -8,13 +12,21 @@
 
 .modal{
     position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     z-index: 2;
-    background-color: rgb(186, 185, 185);
+    background-color: rgb(114 21 247);
     border-radius: 8px;
+    color: white;
     min-width: 400px;
     min-height: 250px;
     display: flex;
     justify-content: center;
+    animation-name: aparicion;
+    animation-duration: .6s;
+    animation-timing-function: linear;
+    
 }
 
 .modal-content{
@@ -26,6 +38,7 @@
     gap: 1rem;
     align-items: center;
     justify-content: center;
+    
 }
 
 .modal-content > *{
@@ -37,4 +50,16 @@
     top: .4rem;
     right: .4rem;
     cursor: pointer;
+    fill: white;
+}
+
+
+@keyframes aparicion {
+    from{
+        opacity: 0;
+    }
+
+    to{
+        opacity: 1;
+    }
 }

@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 
-export function Boton({ valor, trabajo, valores, desactivado }) {
 
+export function Boton({ valor, trabajo, valores, desactivado }) {
+  
     switch (valor){
       case '=':
         return (

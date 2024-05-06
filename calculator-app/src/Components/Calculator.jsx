@@ -5,6 +5,7 @@ import { Boton } from './Boton.jsx'
 import { Pantalla } from './Pantalla.jsx'
 import { Modal } from './Modal.jsx'
 
+
 function Calculator() {
   const [valorTotal, setValorTotal] = useState([]) // useState es asincrono
   const [bloquearOperador, setBloquearOperador] = useState(true)
@@ -13,7 +14,8 @@ function Calculator() {
   const [bloquearParentesisDer, setbloquearParentesisDer] = useState(false)
   let contadorParentesisIzq = 0; //Cuando un useState se ejecuta se re-renderiza el componente.
   const [contadorParentesisDer, setContadorParentesisDer] = useState(0)
-  
+ 
+
   const [ propiedadesModal, setPropiedadesModal] = useState({
     titulo: '',
     texto: ''
@@ -144,9 +146,10 @@ function Calculator() {
     } 
 
     habilitarParentesisDer(valorTotal) //Esto se ejecuta independientemente de si hay o no elementos en la pantalla
+    
+
   }, [valorTotal]);
 
-  
 
   return (
     <>
