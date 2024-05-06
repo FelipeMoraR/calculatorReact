@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
-import './App.css'
+import '../styles/App.css'
+import '../styles/Modal.css'
 import { Boton } from './Boton.jsx'
 import { Pantalla } from './Pantalla.jsx'
+import { Modal } from './Modal.jsx'
 
 function Calculator() {
   const [valorTotal, setValorTotal] = useState([]) // useState es asincrono
@@ -12,6 +14,15 @@ function Calculator() {
   let contadorParentesisIzq = 0; //Cuando un useState se ejecuta se re-renderiza el componente.
   const [contadorParentesisDer, setContadorParentesisDer] = useState(0)
   
+  const [ propiedadesModal, setPropiedadesModal] = useState({
+    titulo: '',
+    texto: ''
+  })
+  const [ mostrarModal, setMostrarModal] = useState(false)
+
+  const cerrarModal = () => {
+    setMostrarModal(false)
+  }
 
   const resultado = (valores) => {
     
@@ -22,7 +33,7 @@ function Calculator() {
       setValorTotal([resultadoParcial])
       setContadorParentesisDer(0) //Reseteamos el contador cuando le da a ver resultado
     } catch (error) {
-      console.error('Este es el error => ', error)
+      
       mensajeErrorResultado(valores)
       setContadorParentesisDer(0)
       limpiar()
@@ -32,10 +43,17 @@ function Calculator() {
   const mensajeErrorResultado = (resultado) => {
     let resultadoUnido = resultado.join('')
     if( resultadoUnido.includes('()') ) {
-      alert('Error, el formato tiene parentesis vacios')
+      setPropiedadesModal({
+        titulo: 'Error',
+        texto: 'No pueden haber parentesis vacios'
+      })
     } else {
-      alert('Error, hay uno o varios parentesis sin cerrar')
+      setPropiedadesModal({
+        titulo: 'Error',
+        texto: 'No pueden haber parentesis sin cerrar'
+      })
     }
+    setMostrarModal(true)
   }
 
   const actualizarValor = (valor) => {
@@ -132,6 +150,16 @@ function Calculator() {
 
   return (
     <>
+      { mostrarModal && ( //Si mostralModal es true renderiza el modal, si no, no.
+        <Modal 
+          titulo = {propiedadesModal.titulo}
+          texto = {propiedadesModal.texto}
+          onClose = {cerrarModal}
+        >
+          
+        </Modal>
+      )}
+
       <div className='calculadora'>
         <Pantalla valores={valorTotal}></Pantalla>
 
@@ -164,7 +192,7 @@ function Calculator() {
               <Boton valor={'C'} trabajo = {limpiar} valores = {valorTotal}></Boton>
               <Boton valor={'⌫'} trabajo = {borrarUltimoValor} valores = {valorTotal}> </Boton>
             </div>
-            </div>
+          </div>
         </div>
 
       </div>
